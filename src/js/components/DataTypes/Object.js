@@ -36,7 +36,7 @@ class RjvObject extends React.PureComponent {
 
     static getState = props => {
         const size = Object.keys(props.src).length;
-        const expanded =
+        let expanded =
             (props.collapsed === false ||
                 (props.collapsed !== true && props.collapsed > props.depth)) &&
             (!props.shouldCollapse ||
@@ -48,6 +48,9 @@ class RjvObject extends React.PureComponent {
                 }) === false) &&
             //initialize closed if object has no items
             size !== 0;
+        if (props.expandOnly) {
+            expanded = props.expandOnly.startsWith(props.activePath);
+        }
         const state = {
             expanded: AttributeStore.get(
                 props.rjvId,
@@ -131,7 +134,7 @@ class RjvObject extends React.PureComponent {
     }
 
     getBraceStart(object_type, expanded) {
-        const { src, theme, iconStyle, parent_type } = this.props;
+        const { src, theme, iconStyle, parent_type, activePath } = this.props;
 
         if (parent_type === 'array_group') {
             return (
@@ -183,6 +186,7 @@ class RjvObject extends React.PureComponent {
             theme,
             jsvRoot,
             iconStyle,
+            activePath,
             ...rest
         } = this.props;
 
@@ -230,7 +234,8 @@ class RjvObject extends React.PureComponent {
             parent_type,
             index_offset,
             groupArraysAfterLength,
-            namespace
+            namespace,
+            activePath,
         } = this.props;
         const { object_type } = this.state;
         let theme = props.theme;
@@ -242,6 +247,7 @@ class RjvObject extends React.PureComponent {
         }
         keys.forEach(name => {
             variable = new JsonVariable(name, variables[name]);
+            const currentPath = `${activePath}.${variable.name}`;
 
             if (parent_type === 'array_group' && index_offset) {
                 variable.name = parseInt(variable.name) + index_offset;
@@ -257,6 +263,7 @@ class RjvObject extends React.PureComponent {
                         src={variable.value}
                         namespace={namespace.concat(variable.name)}
                         parent_type={object_type}
+                        activePath={currentPath}
                         {...props}
                     />
                 );
@@ -269,7 +276,6 @@ class RjvObject extends React.PureComponent {
                 ) {
                     ObjectComponent = ArrayGroup;
                 }
-
                 elements.push(
                     <ObjectComponent
                         key={variable.name}
@@ -279,6 +285,7 @@ class RjvObject extends React.PureComponent {
                         namespace={namespace.concat(variable.name)}
                         type="array"
                         parent_type={object_type}
+                        activePath={currentPath}
                         {...props}
                     />
                 );
@@ -290,6 +297,7 @@ class RjvObject extends React.PureComponent {
                         singleIndent={SINGLE_INDENT}
                         namespace={namespace}
                         type={this.props.type}
+                        activePath={currentPath}
                         {...props}
                     />
                 );

@@ -43,7 +43,7 @@ export default class extends React.PureComponent {
     render() {
         const {
             src, groupArraysAfterLength, depth,
-            name, theme, jsvRoot, namespace, parent_type,
+            name, theme, jsvRoot, namespace, parent_type, activePath,
             ...rest
         } = this.props;
 
@@ -78,7 +78,7 @@ export default class extends React.PureComponent {
                             {this.getExpandedIcon(i)}
                         </div>
                         {this.state.expanded[i] ?
-                            <ObjectComponent 
+                            <ObjectComponent
                                 key={name + i}
                                 depth={0}
                                 name={false}
@@ -90,6 +90,7 @@ export default class extends React.PureComponent {
                                 type="array"
                                 parent_type="array_group"
                                 theme={theme}
+                                activePath={`${activePath}.${name}`}
                                 {...rest}
                             />
                             :   <span {...Theme(theme, 'brace')}  onClick={(e) => {this.toggleCollapsed(i);}} class='array-group-brace'>

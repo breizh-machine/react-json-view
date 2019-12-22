@@ -109,6 +109,17 @@ ReactDom.render(
 
         <br />
 
+        {/* initialize this one with a specific path expanded, all other paths are collapsed */}
+        <JsonViewer
+            src={getExampleJson5()}
+            name={'specific_path_expanded'}
+            displayDataTypes={false}
+            expandOnly={'#.info.emails.1'}
+            indentWidth={2}
+        />
+
+        <br />
+
         {/* initialize an example with a long string */}
         <JsonViewer
             src={getExampleJson3()}
@@ -269,6 +280,35 @@ function getExampleJson4() {
     large_array.push(new Array(75).fill(Math.random()))
 
     return large_array
+}
+
+//just a function to get an example JSON object
+function getExampleJson5() {
+    return {
+        info: {
+            emails: [
+                {
+                    main: 'test@test.com',
+                    copy: 'test@copy.com'
+                },
+                {
+                    main: 'test2@test.com',
+                    copy: 'test2@copy.com'
+                },
+                {
+                    main: 'test3@test.com',
+                    copy: 'test3@copy.com'
+                }
+            ]
+        },
+        person: {
+            age: 1,
+            firstName: 'John',
+            address: {
+                city: 'London'
+            }
+        }
+    }
 }
 
 function getExampleArray() {

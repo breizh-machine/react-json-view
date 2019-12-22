@@ -19,6 +19,7 @@ export default class extends React.PureComponent {
                         namespace={namespace}
                         depth={0}
                         jsvRoot={true}
+                        activePath={'#'}
                         {...props} />
                 </div>
             </div>
